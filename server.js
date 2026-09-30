@@ -7,6 +7,9 @@ const { spawn } = require('child_process');
 const nodemailer = require('nodemailer');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
+// Detect Vercel / any serverless environment — skip local process spawning
+const IS_SERVERLESS = !!(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.NOW_REGION);
+
 const app  = express();
 const port = process.env.PORT || 3001;
 
@@ -237,6 +240,8 @@ let llamaProcess = null;
 let llamaReady = false;
 
 function startLocalLlamaServer() {
+  // Never spawn local executables in serverless environments (e.g. Vercel)
+  if (IS_SERVERLESS) return;
   if (llamaProcess || !fs.existsSync(LOCAL_MODEL_PATH) || !fs.existsSync(LLAMA_SERVER_EXE)) {
     return;
   }
@@ -285,10 +290,12 @@ function startLocalLlamaServer() {
   }
 }
 
-// Clean up child process on exit
-process.on('exit', () => { if (llamaProcess) llamaProcess.kill(); });
-process.on('SIGINT', () => { if (llamaProcess) llamaProcess.kill(); process.exit(); });
-process.on('SIGTERM', () => { if (llamaProcess) llamaProcess.kill(); process.exit(); });
+// Clean up child process on exit (local dev only — skip in serverless)
+if (!IS_SERVERLESS) {
+  process.on('exit', () => { if (llamaProcess) llamaProcess.kill(); });
+  process.on('SIGINT', () => { if (llamaProcess) llamaProcess.kill(); process.exit(); });
+  process.on('SIGTERM', () => { if (llamaProcess) llamaProcess.kill(); process.exit(); });
+}
 
 const OLLAMA_URL  = process.env.OLLAMA_URL || 'http://localhost:11434';
 const HF_TOKEN    = process.env.HF_TOKEN;
@@ -418,23 +425,30 @@ app.get('/api/ai-status', async (req, res) => {
   res.json(status);
 });
 
-app.listen(port, () => {
-  console.log('');
-  console.log('  JanConnect is running!');
-  console.log('  Open: http://localhost:' + port);
-  console.log('');
+// In serverless mode (Vercel) we export the app instead of calling listen().
+// In local dev we start the server normally and optionally launch the llama process.
+if (!IS_SERVERLESS) {
+  app.listen(port, () => {
+    console.log('');
+    console.log('  JanConnect is running!');
+    console.log('  Open: http://localhost:' + port);
+    console.log('');
 
-  // Start local Qwen if model file exists
-  if (fs.existsSync(LOCAL_MODEL_PATH) && fs.existsSync(LLAMA_SERVER_EXE)) {
-    startLocalLlamaServer();
-  } else {
-    console.log('  ℹ️  Local model file not detected yet. Keyword fallback active.');
-    // Check periodically for when download completes
-    const checkFile = setInterval(() => {
-      if (fs.existsSync(LOCAL_MODEL_PATH) && fs.existsSync(LLAMA_SERVER_EXE)) {
-        clearInterval(checkFile);
-        startLocalLlamaServer();
-      }
-    }, 3000);
-  }
-});
+    // Start local Qwen if model file exists
+    if (fs.existsSync(LOCAL_MODEL_PATH) && fs.existsSync(LLAMA_SERVER_EXE)) {
+      startLocalLlamaServer();
+    } else {
+      console.log('  ℹ️  Local model file not detected yet. Keyword fallback active.');
+      // Check periodically for when download completes
+      const checkFile = setInterval(() => {
+        if (fs.existsSync(LOCAL_MODEL_PATH) && fs.existsSync(LLAMA_SERVER_EXE)) {
+          clearInterval(checkFile);
+          startLocalLlamaServer();
+        }
+      }, 3000);
+    }
+  });
+}
+
+// Export app for Vercel's @vercel/node serverless runtime
+module.exports = app;
