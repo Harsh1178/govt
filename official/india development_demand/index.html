@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>India Development Demand Dashboard</title>
+
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    crossorigin=""
+  />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">IN</div>
+      <div>
+        <h1>India Development Demand</h1>
+        <p>Citizen demands • infrastructure • implementation</p>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <span class="live-dot"></span>
+      <span>LIVE DASHBOARD</span>
+      <span id="officer-badge" style="background:rgba(255,255,255,0.12); padding:5px 12px; border-radius:99px; font-size:12px; font-weight:600; margin-left:12px; border:1px solid rgba(255,255,255,0.2);">
+        👤 <span id="officer-name">Official</span> (<span id="officer-dept-label">Roads</span>)
+      </span>
+      <button id="logoutBtn" class="secondary-btn" style="margin-left: 10px; cursor:pointer;">Logout</button>
+    </div>
+  </header>
+
+  <nav class="tab-nav">
+    <button class="tab-btn active" data-tab="heatmap">📊 Demand Heatmap</button>
+    <button class="tab-btn" data-tab="complaints">📋 Department Complaints</button>
+    <button class="tab-btn" data-tab="resolved">✅ Resolved</button>
+  </nav>
+
+  <div id="heatmap-tab" class="tab-content">
+    <main class="page">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">NATIONAL DEMAND INTELLIGENCE</p>
+          <h2>Where are citizens asking for development?</h2>
+          <p class="hero-text">
+            Hover over a highlighted state to see its main demand, population,
+            request volume, work completed and planned investment.
+          </p>
+        </div>
+
+        <div class="legend-card">
+          <span>Demand intensity</span>
+          <div class="legend-gradient"></div>
+          <div class="legend-labels">
+            <small>Low</small>
+            <small>High</small>
+          </div>
+        </div>
+      </section>
+
+      <section class="dashboard-grid">
+        <aside class="left-panel">
+          <div class="panel-title">
+            <span class="icon">◈</span>
+            <div>
+              <h3>Overview</h3>
+              <p>Tracked development requests</p>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <span>Total states tracked</span>
+            <strong id="stateCount">5</strong>
+            <small>High-demand states</small>
+          </div>
+
+          <div class="metric-card">
+            <span>Total demand requests</span>
+            <strong id="requestTotal">0</strong>
+            <small>Across tracked states</small>
+          </div>
+
+          <div class="metric-card">
+            <span>Average work completed</span>
+            <strong id="workAverage">0%</strong>
+            <small>Implementation progress</small>
+          </div>
+
+          <div class="metric-card">
+            <span>Planned investment</span>
+            <strong id="investmentTotal">₹1.80L Cr</strong>
+            <small>Illustrative dashboard data</small>
+          </div>
+
+          <div class="info-card">
+            <h4>How the colors work</h4>
+            <p>
+              States with more citizen requests receive a darker red shade.
+              Hovering over a state activates its detail card.
+            </p>
+          </div>
+        </aside>
+
+        <section class="map-card">
+          <div class="map-heading">
+            <div>
+              <h3>India Demand Heatmap</h3>
+              <p>Move your cursor over a highlighted state</p>
+            </div>
+            <span class="map-status">5 priority states</span>
+          </div>
+
+          <div id="map"></div>
+        </section>
+
+        <aside class="right-panel">
+          <div class="panel-title">
+            <span class="icon">▤</span>
+            <div>
+              <h3>State Demands</h3>
+              <p>Hover or select a state</p>
+            </div>
+          </div>
+
+          <div id="state-list"></div>
+        </aside>
+      </section>
+
+      <footer>
+        <span>India Development Demand Dashboard</span>
+        <span>Demo data • Connect your backend/API for live requests</span>
+      </footer>
+    </main>
+  </div>
+
+  <div id="complaints-tab" class="tab-content hidden page">
+    <div class="complaints-header">
+      <div>
+        <h2>Department Complaints</h2>
+        <div class="dept-selector-wrap" style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+          <label for="dept-select" style="font-size:12px; font-weight:700; color:#475569;">DEPARTMENT:</label>
+          <select id="dept-select" class="dept-selector" style="padding:6px 12px; border-radius:8px; border:1.5px solid #cbd5e1; font-weight:600; font-size:13px; color:#1e293b; background:#fff; cursor:pointer;">
+            <option value="All Departments">All Departments (Show All)</option>
+            <option value="Roads Department">Roads Department</option>
+            <option value="Water Department">Water Department</option>
+            <option value="Electricity Department">Electricity Department</option>
+            <option value="Sanitation Department">Sanitation Department</option>
+            <option value="Health Department">Health Department</option>
+            <option value="Municipal Corporation">Municipal Corporation</option>
+            <option value="Education Department">Education Department</option>
+            <option value="Public Works Department">Public Works Department</option>
+            <option value="Traffic Police">Traffic Police</option>
+            <option value="Urban Development Department">Urban Development Department</option>
+            <option value="Rural Development Department">Rural Development Department</option>
+            <option value="District Administration">District Administration</option>
+          </select>
+        </div>
+      </div>
+      <button id="analyzeBtn" class="primary-btn">🤖 Analyse & Group with AI</button>
+    </div>
+    
+    <!-- AI Groups Section -->
+    <div id="groups-section" class="hidden">
+      <div class="section-title">AI-Grouped Issue Clusters (Qwen2.5 Powered)</div>
+      <div id="groups-list"></div>
+    </div>
+    
+    <!-- Individual Complaints -->
+    <div class="section-title">All Pending Complaints</div>
+    <div id="complaints-list"></div>
+  </div>
+
+  <div id="resolved-tab" class="tab-content hidden page">
+    <div class="complaints-header">
+      <div>
+        <h2>Resolved Complaints</h2>
+        <div class="dept-selector-wrap" style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+          <label for="dept-select-resolved" style="font-size:12px; font-weight:700; color:#475569;">DEPARTMENT:</label>
+          <select id="dept-select-resolved" class="dept-selector" style="padding:6px 12px; border-radius:8px; border:1.5px solid #cbd5e1; font-weight:600; font-size:13px; color:#1e293b; background:#fff; cursor:pointer;">
+            <option value="All Departments">All Departments (Show All)</option>
+            <option value="Roads Department">Roads Department</option>
+            <option value="Water Department">Water Department</option>
+            <option value="Electricity Department">Electricity Department</option>
+            <option value="Sanitation Department">Sanitation Department</option>
+            <option value="Health Department">Health Department</option>
+            <option value="Municipal Corporation">Municipal Corporation</option>
+            <option value="Education Department">Education Department</option>
+            <option value="Public Works Department">Public Works Department</option>
+            <option value="Traffic Police">Traffic Police</option>
+            <option value="Urban Development Department">Urban Development Department</option>
+            <option value="Rural Development Department">Rural Development Department</option>
+            <option value="District Administration">District Administration</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div id="resolved-list"></div>
+  </div>
+
+  <!-- Floating Cursor Tooltip for Demand Heatmap -->
+  <div id="state-tooltip" class="state-tooltip">
+    <div class="tooltip-top">
+      <div>
+        <span class="tooltip-label">STATE DEMAND INTELLIGENCE</span>
+        <h3 id="tip-state">State Name</h3>
+      </div>
+      <span id="tip-level" class="demand-level">HIGH</span>
+    </div>
+
+    <div class="main-demand">
+      <span>Key Citizen Demand</span>
+      <strong id="tip-demand">—</strong>
+    </div>
+
+    <div class="tip-grid">
+      <div>
+        <span>Population</span>
+        <strong id="tip-population">—</strong>
+      </div>
+      <div>
+        <span>Requests</span>
+        <strong id="tip-requests">—</strong>
+      </div>
+      <div>
+        <span>Work Done</span>
+        <strong id="tip-work">—</strong>
+      </div>
+      <div>
+        <span>Investment</span>
+        <strong id="tip-investment">—</strong>
+      </div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>Implementation progress</span>
+        <strong id="tip-progress">—</strong>
+      </div>
+      <div class="progress-track">
+        <div id="tip-progress-bar"></div>
+      </div>
+    </div>
+    <div id="tip-demand-score"></div>
+  </div>
+
+  <div id="resolve-modal" class="backdrop hidden">
+    <div class="modal" style="max-width:520px; width:92%; background:#fff; border-radius:16px; padding:24px; position:relative; box-shadow:0 20px 40px rgba(0,0,0,0.2);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <h3 id="resolve-modal-heading" style="margin:0; font-size:18px; color:#0f172a;">Mark as Resolved</h3>
+        <button id="resolve-cancel-x" style="background:none; border:none; font-size:20px; cursor:pointer; color:#94a3b8;" title="Close">✕</button>
+      </div>
+      <p id="resolve-group-title" style="color:#2563eb; font-weight:700; font-size:13px; margin:4px 0 12px;"></p>
+      <p class="modal-note" style="color:#64748b; font-size:12px; margin-bottom:14px;">Resolution record will update the complaint status and send verification notification to citizens.</p>
+      
+      <div class="upload-area" style="margin-bottom:12px;">
+        <input type="file" id="resolve-photo" accept="image/*" style="display:none;">
+        <label for="resolve-photo" style="display:inline-block; padding:10px 16px; background:#eff6ff; border:1.5px dashed #3b82f6; border-radius:8px; cursor:pointer; color:#1d4ed8; font-weight:600; font-size:12px;">📸 Upload Work Completion / After Photo</label>
+      </div>
+      <div id="resolve-preview" class="hidden" style="margin-bottom:12px;"><img id="resolve-img" alt="Resolved evidence" style="max-width:100%; max-height:160px; border-radius:8px; object-fit:cover; border:1px solid #e2e8f0;"></div>
+      
+      <label style="display:block; font-size:12px; font-weight:700; color:#475569; margin-bottom:4px;">Action Taken / Resolution Note:</label>
+      <textarea id="resolve-note" placeholder="Describe the resolution work done (e.g. Pipeline repaired, potholes re-carpeted with asphalt, power restored)..." rows="3" style="width:100%; box-sizing:border-box; padding:10px; border:1.5px solid #cbd5e1; border-radius:8px; font-family:inherit; font-size:12px; resize:vertical;"></textarea>
+      
+      <div class="modal-actions" style="margin-top:16px; display:flex; gap:10px; justify-content:flex-end;">
+        <button id="resolve-cancel" class="secondary-btn" style="padding:9px 18px; border-radius:8px; border:1px solid #cbd5e1; background:#f8fafc; font-weight:600; cursor:pointer;">Cancel</button>
+        <button id="resolve-submit" class="primary-btn" style="padding:9px 18px; border-radius:8px; background:#16a34a; color:#fff; border:none; font-weight:700; cursor:pointer;">✅ Confirm Resolution</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="loading-overlay" class="backdrop hidden">
+    <div class="spinner"></div>
+    <p id="loading-text" style="color:white; margin-top:10px;">Loading...</p>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    crossorigin=""
+  ></script>
+  <script type="module" src="script.js"></script>
+</body>
+</html>

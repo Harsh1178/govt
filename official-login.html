@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Official Login - JanConnect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="citizen-login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back</a>
+            <div class="logo">
+                <div class="logo-mark">JC</div>
+                <div class="logo-text">
+                    <span class="brand">JanConnect</span>
+                </div>
+            </div>
+            <div></div>
+        </div>
+    </header>
+
+    <main class="login-main">
+        <div class="login-card">
+            <div class="badge-wrapper">
+                <span class="badge navy-badge">GOVERNMENT OFFICIAL</span>
+            </div>
+            <h2>Official Portal Login</h2>
+            
+            <div id="toast" class="toast hidden"></div>
+
+            <div id="login-form">
+                <div class="form-group">
+                    <label>Official Email</label>
+                    <input type="email" id="login-email" placeholder="officer@govemp.in">
+                </div>
+
+                <div class="form-group">
+                    <label>Department</label>
+                    <select id="login-dept">
+                        <option value="Roads Department">Roads Department</option>
+                        <option value="Water Department">Water Department</option>
+                        <option value="Electricity Department">Electricity Department</option>
+                        <option value="Sanitation Department">Sanitation Department</option>
+                        <option value="Health Department">Health Department</option>
+                        <option value="Municipal Corporation">Municipal Corporation</option>
+                        <option value="Education Department">Education Department</option>
+                        <option value="Public Works Department">Public Works Department</option>
+                        <option value="Traffic Police">Traffic Police</option>
+                        <option value="District Administration">District Administration</option>
+                        <option value="Urban Development Department">Urban Development Department</option>
+                        <option value="Rural Development Department">Rural Development Department</option>
+                        <option value="All Departments">All Departments (Show All)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="login-password" placeholder="Enter your password (or leave blank for demo)">
+                </div>
+
+                <div style="margin-bottom:18px;">
+                    <p style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; margin-bottom:8px; letter-spacing:0.5px;">Quick Demo Login (1-Click):</p>
+                    <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                        <button type="button" class="quick-demo-btn" data-dept="Roads Department" data-email="roads.officer@govemp.in" style="background:#f1f5f9; border:1px solid #cbd5e1; padding:5px 9px; border-radius:6px; font-size:11px; font-weight:600; cursor:pointer; color:#1e293b;">🚗 Roads</button>
+                        <button type="button" class="quick-demo-btn" data-dept="Water Department" data-email="water.officer@govemp.in" style="background:#f1f5f9; border:1px solid #cbd5e1; padding:5px 9px; border-radius:6px; font-size:11px; font-weight:600; cursor:pointer; color:#1e293b;">💧 Water</button>
+                        <button type="button" class="quick-demo-btn" data-dept="Electricity Department" data-email="power.officer@govemp.in" style="background:#f1f5f9; border:1px solid #cbd5e1; padding:5px 9px; border-radius:6px; font-size:11px; font-weight:600; cursor:pointer; color:#1e293b;">⚡ Electricity</button>
+                        <button type="button" class="quick-demo-btn" data-dept="Sanitation Department" data-email="sanitation.officer@govemp.in" style="background:#f1f5f9; border:1px solid #cbd5e1; padding:5px 9px; border-radius:6px; font-size:11px; font-weight:600; cursor:pointer; color:#1e293b;">🧹 Sanitation</button>
+                        <button type="button" class="quick-demo-btn" data-dept="Health Department" data-email="health.officer@govemp.in" style="background:#f1f5f9; border:1px solid #cbd5e1; padding:5px 9px; border-radius:6px; font-size:11px; font-weight:600; cursor:pointer; color:#1e293b;">🏥 Health</button>
+                        <button type="button" class="quick-demo-btn" data-dept="Municipal Corporation" data-email="municipal.officer@govemp.in" style="background:#f1f5f9; border:1px solid #cbd5e1; padding:5px 9px; border-radius:6px; font-size:11px; font-weight:600; cursor:pointer; color:#1e293b;">🏛️ Municipal</button>
+                    </div>
+                </div>
+
+                <button id="btn-login" class="btn btn-navy btn-full">
+                    <span class="btn-text">Login as Official</span>
+                    <span class="btn-spinner hidden"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                </button>
+                
+                <div class="toggle-register">
+                    <a href="#" id="link-show-register">First time? Register below</a>
+                </div>
+            </div>
+
+            <div id="register-form" class="collapsible-section hidden">
+                <h3>Register Official Account</h3>
+                <br>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="reg-name" placeholder="Name">
+                </div>
+                <div class="form-group">
+                    <label>Department</label>
+                    <select id="reg-dept">
+                        <option value="Roads Department">Roads Department</option>
+                        <option value="Water Department">Water Department</option>
+                        <option value="Electricity Department">Electricity Department</option>
+                        <option value="Sanitation Department">Sanitation Department</option>
+                        <option value="Health Department">Health Department</option>
+                        <option value="Public Works Department">Public Works Department</option>
+                        <option value="Urban Development Department">Urban Development Department</option>
+                        <option value="Municipal Corporation">Municipal Corporation</option>
+                        <option value="Education Department">Education Department</option>
+                        <option value="Traffic Police">Traffic Police</option>
+                        <option value="District Administration">District Administration</option>
+                        <option value="Rural Development Department">Rural Development Department</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Official Email</label>
+                    <input type="email" id="reg-email" placeholder="officer@govemp.in">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="reg-password" placeholder="Create a password">
+                </div>
+
+                <button id="btn-register" class="btn btn-navy btn-full">
+                    <span class="btn-text">Register & Login</span>
+                    <span class="btn-spinner hidden"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                </button>
+            </div>
+
+            <div class="switch-role">
+                <a href="citizen-login.html">Not an official? Login as Citizen &rarr;</a>
+            </div>
+        </div>
+    </main>
+
+    <script type="module" src="official-login.js"></script>
+</body>
+</html>

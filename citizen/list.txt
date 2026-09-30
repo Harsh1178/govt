@@ -1,0 +1,12 @@
+Municipal Corporation
+Water Department
+Electricity Department
+Roads Department
+Public Works Department
+Health Department
+Sanitation Department
+Traffic Police
+District Administration
+Urban Development Department
+Rural Development Department
+Education Department

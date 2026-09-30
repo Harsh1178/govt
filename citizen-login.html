@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Citizen Login - JanConnect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="citizen-login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back</a>
+            <div class="logo">
+                <div class="logo-mark">JC</div>
+                <div class="logo-text"><span class="brand">JanConnect</span></div>
+            </div>
+            <div></div>
+        </div>
+    </header>
+    <main class="login-main">
+        <div class="login-card">
+            <div class="badge-wrapper"><span class="badge blue-badge">CITIZEN PORTAL</span></div>
+            <h2>Welcome to JanConnect</h2>
+            <p style="color:#64748b;font-size:13px;margin-bottom:20px;">Enter your name and email to access your citizen account.</p>
+            <div id="toast" class="toast hidden"></div>
+            <form id="citizen-login-form" onsubmit="return false;">
+                <div class="form-group">
+                    <label>Your Name</label>
+                    <input type="text" id="name" placeholder="Enter your full name" required autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="email" placeholder="Enter your email address" required autocomplete="off">
+                </div>
+                <button type="submit" id="btn-login" class="btn btn-blue btn-full">
+                    <span class="btn-text">Enter as Citizen</span>
+                    <span class="btn-spinner hidden"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                </button>
+            </form>
+            <div class="switch-role" style="margin-top:24px;">
+                <a href="official-login.html">Government Official? Login here &rarr;</a>
+            </div>
+        </div>
+    </main>
+    <script type="module" src="citizen-login.js"></script>
+</body>
+</html>

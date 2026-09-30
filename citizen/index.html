@@ -1,0 +1,289 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JanConnect — Citizen Portal</title><link rel="stylesheet" href="style.css"></head><body>
+<header><div class="brand"><b>JC</b><div><strong>JanConnect</strong><small>Citizen • Government • Community</small></div></div>
+<nav><button data-view="explore" class="active">Explore</button><button data-view="myposts">My Posts</button><button data-view="mine">My Complaints</button><button data-view="rewards">Rewards</button><button data-view="profile">Profile</button></nav>
+<div class="user" data-view="profile" style="cursor:pointer;" title="Click to view Profile"><i id="userInitial">H</i><span id="userNameDisplay">Harsh Kumar<br><small>Citizen</small></span><button id="logoutBtn" class="logout-btn" onclick="event.stopPropagation()">Logout</button></div></header>
+
+<main><aside class="sidebar">
+<section class="profile" data-view="profile" style="cursor:pointer;" title="Click to view Profile"><div class="cover"></div><div class="pbody"><i id="profileInitial">H</i><h3 id="profileName">Harsh Kumar</h3><small id="profileEmail">Citizen</small><div class="points">POINTS <b id="points">1,280</b></div></div></section>
+<div class="stats"><div><b id="statTotal">0</b><small>Raised</small></div><div><b id="statResolved">0</b><small>Resolved</small></div><div><b id="statActive">0</b><small>Active</small></div></div>
+<section class="side"><small>MY ACCOUNT</small><button data-view="profile">👤 Profile</button><button data-view="myposts">📢 My Posts</button><button data-view="mine">▣ My Complaints <em id="sideBadge">0</em></button><button data-view="rewards">★ Rewards</button><small>COMMUNITY</small><button data-view="explore">◉ Explore</button><button id="sideRaise">＋ Raise Complaint</button></section>
+<div class="help"><b>Need help?</b><p>Track an issue, report a problem or learn how citizen points work.</p><button id="helpCentreBtn">Help Centre →</button></div>
+</aside>
+
+<section class="content">
+<div id="explore" class="view active">
+<div class="heading"><div><label>CITIZEN COMMUNITY</label><h1 id="welcomeHeading">Good morning 👋</h1><p>See what citizens are reporting and follow public issue progress.</p></div><button class="primary" id="raise1">＋ Raise a complaint</button></div>
+<div class="notice"><b>✓</b><div><strong>Join the civic movement.</strong><small>Your voice creates measurable change.</small></div><button data-view="mine">View progress →</button></div>
+<div class="feedgrid"><div>
+  <div class="feedtitle">
+    <h2>Community feed</h2>
+    <div class="feed-filter-bar">
+      <div class="filter-box-group">
+        <button class="filter-tab active" data-filter="all">Explore all</button>
+        <button class="filter-tab" data-filter="nearby">Nearby</button>
+        <button class="filter-tab" data-filter="top">Most upvoted</button>
+      </div>
+      <button id="toggleCityFilterBtn" class="filter-icon-btn" title="Filter by Area or City" aria-label="Filter by Area or City">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+        </svg>
+        <span>Filter</span>
+        <span class="filter-badge-dot"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Downward Expandable Area/City Filter Panel (Hidden by default, expands when filter icon is clicked) -->
+  <div id="cityFilterDropdown" class="city-filter-dropdown hidden">
+    <div class="dropdown-header">
+      <label for="cityFilterInput">📍 Filter feed by Area or City</label>
+      <button id="closeCityFilterDropdown" class="dropdown-close-btn" title="Close filter">×</button>
+    </div>
+    <div class="dropdown-input-row">
+      <input type="text" id="cityFilterInput" placeholder="Enter colony, area, or city (e.g. Lucknow, Patna, Sector 15)..." autocomplete="off">
+      <button id="clearCityFilter" class="dropdown-clear-btn" title="Clear filter">Clear</button>
+    </div>
+    <div class="quick-city-chips">
+      <span class="chips-label">Quick filter:</span>
+      <button type="button" class="city-chip" data-city="Patna">Patna</button>
+      <button type="button" class="city-chip" data-city="Lucknow">Lucknow</button>
+      <button type="button" class="city-chip" data-city="Ahmedabad">Ahmedabad</button>
+      <button type="button" class="city-chip" data-city="Delhi">Delhi</button>
+      <button type="button" class="city-chip" data-city="Hyderabad">Hyderabad</button>
+      <button type="button" class="city-chip" data-city="Bengaluru">Bengaluru</button>
+      <button type="button" class="city-chip" data-city="Kochi">Kochi</button>
+    </div>
+  </div>
+
+  <div id="feed"></div>
+</div>
+<aside class="trends"><h3>Trending issues</h3>
+  <p class="trend-tag" data-tag="Road" style="cursor:pointer;" title="Filter by Road"><b>#RoadRepair</b><strong>2.8k</strong><small>complaints</small></p>
+  <p class="trend-tag" data-tag="Waste" style="cursor:pointer;" title="Filter by Waste"><b>#WasteManagement</b><strong>1.9k</strong><small>complaints</small></p>
+  <p class="trend-tag" data-tag="Street" style="cursor:pointer;" title="Filter by Street"><b>#StreetLights</b><strong>1.4k</strong><small>complaints</small></p>
+  <p class="trend-tag" data-tag="Water" style="cursor:pointer;" title="Filter by Water"><b>#WaterSupply</b><strong>982</strong><small>complaints</small></p>
+</aside></div>
+</div>
+
+<div id="mine" class="view"><div class="heading"><div><label>YOUR RECORD</label><h1>My Complaints</h1><p>Track department, official, progress and resolution history.</p></div><button class="primary" id="raise2">＋ New complaint</button></div>
+<div class="summary"><div>Total raised<b id="sumTotal">0</b></div><div>Resolved<b class="green" id="sumResolved">0</b></div><div>In progress<b class="orange" id="sumProgress">0</b></div><div>Under review<b id="sumReview">0</b></div></div><div id="complaints"></div></div>
+
+<div id="myposts" class="view"><div class="heading"><div><label>YOUR PUBLIC VOICES</label><h1>My Posts</h1><p>See your public community posts.</p></div></div>
+<div id="myPostsList"></div></div>
+
+<div id="rewards" class="view"><div class="heading"><div><label>CITIZEN CONTRIBUTION</label><h1>Your Rewards</h1><p>Earn points for verified reports and community participation.</p></div></div>
+<div class="rewardhero"><small>AVAILABLE POINTS</small><b id="rpoints">1,280</b><p>Next badge at 1,500 points</p><div><i></i></div></div>
+<div id="couponsGrid" class="coupons-grid"></div></div>
+
+<div id="profile" class="view">
+  <div class="heading">
+    <div><label>MY ACCOUNT</label><h1>Citizen Profile</h1><p>Personal details, verified contact information, and civic activity records.</p></div>
+    <button class="primary" id="toggleEditProfileBtn">✏️ Edit Details</button>
+  </div>
+  
+  <div class="profile-detail-card">
+    <div class="profile-header-banner">
+      <div class="profile-avatar-lg" id="profileAvatarLg">H</div>
+      <div>
+        <h2 id="pf-header-name" style="margin:0 0 4px;font-size:20px;color:#0f172a;">Harsh Kumar</h2>
+        <span class="profile-badge">✓ Verified Citizen Account</span>
+      </div>
+    </div>
+    
+    <div class="profile-fields" id="profileDisplayFields">
+      <div class="pfield">
+        <label>Full Name</label>
+        <div id="pf-name" class="pval">—</div>
+      </div>
+      <div class="pfield">
+        <label>Email Address</label>
+        <div id="pf-email" class="pval">—</div>
+      </div>
+      <div class="pfield">
+        <label>Phone Number</label>
+        <div id="pf-phone" class="pval">—</div>
+      </div>
+      <div class="pfield">
+        <label>Residential Address</label>
+        <div id="pf-address" class="pval">—</div>
+      </div>
+    </div>
+
+    <!-- Inline Edit Form (Hidden by default) -->
+    <form id="profileEditForm" class="profile-edit-form hidden">
+      <div class="profile-edit-grid">
+        <div>
+          <label class="edit-label">Full Name</label>
+          <input type="text" id="editName" class="edit-input" required>
+        </div>
+        <div>
+          <label class="edit-label">Email Address</label>
+          <input type="email" id="editEmail" class="edit-input" required>
+        </div>
+        <div>
+          <label class="edit-label">Phone Number</label>
+          <input type="text" id="editPhone" class="edit-input" placeholder="+91 98765 43210">
+        </div>
+        <div>
+          <label class="edit-label">Residential Address</label>
+          <input type="text" id="editAddress" class="edit-input" placeholder="e.g. Ward 12, Civil Lines, Lucknow">
+        </div>
+      </div>
+      <div class="edit-btn-row">
+        <button type="button" id="cancelEditBtn" class="edit-cancel-btn">Cancel</button>
+        <button type="submit" class="edit-save-btn">💾 Save Changes</button>
+      </div>
+    </form>
+
+    <div class="profile-stats-row">
+      <div class="pstat"><b id="pf-raised">0</b><small>Complaints Raised</small></div>
+      <div class="pstat"><b id="pf-resolved" style="color:#059669;">0</b><small>Resolved Issues</small></div>
+      <div class="pstat"><b id="pf-active" style="color:#d97706;">0</b><small>In Progress</small></div>
+      <div class="pstat"><b id="pf-points" style="color:#2563eb;">1,280</b><small>Reward Points</small></div>
+    </div>
+
+    <div class="profile-section">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <h3 style="margin:0;font-size:13px;font-weight:800;color:#1e293b;">My Raised Complaints</h3>
+        <button class="text-link" data-view="mine" style="border:none;background:none;color:#2563eb;font-weight:700;font-size:11px;cursor:pointer;">View all in tracker →</button>
+      </div>
+      <div id="pf-complaints-list" class="pf-complaints-list"></div>
+    </div>
+
+    <div class="profile-section">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <h3 style="margin:0;font-size:13px;font-weight:800;color:#1e293b;">My Rewards</h3>
+        <button class="text-link" data-view="rewards" style="border:none;background:none;color:#2563eb;font-weight:700;font-size:11px;cursor:pointer;">Redeem more →</button>
+      </div>
+      <div id="pf-rewards-list" class="pf-rewards-list"></div>
+    </div>
+  </div>
+</div>
+</section></main>
+
+<div class="bottom"><button data-view="explore">⌂<small>Explore</small></button><button data-view="myposts">📢<small>My Posts</small></button><button id="raise3" class="fab">＋<small>Raise</small></button><button data-view="mine">▣<small>My Issues</small></button><button data-view="profile">👤<small>Profile</small></button></div>
+
+<div id="modal" class="backdrop hidden">
+  <section class="modal">
+    <div class="modal-head">
+      <div>
+        <span class="modal-badge">CITIZEN PORTAL REPORT</span>
+        <h2>Raise a complaint</h2>
+        <p class="modal-subtitle">Describe the civic issue, type @ to tag a department, attach live camera/file evidence, and auto-detect your location.</p>
+      </div>
+      <button type="button" id="close" class="close" aria-label="Close modal">×</button>
+    </div>
+
+    <form id="form">
+      <div class="field-group">
+        <div class="field-header">
+          <label for="text">Complaint Description <span class="req">*</span></label>
+          <span id="count" class="char-count">0 / 800</span>
+        </div>
+        <div class="composer">
+          <div id="ghostOverlay" class="ghost-overlay" aria-hidden="true"></div>
+          <textarea id="text" rows="5" maxlength="800" required placeholder="Describe the issue... Type @ to tag a department or official (e.g. @Roads Department, @Sanitation Department)..."></textarea>
+          <div id="suggestions" class="suggestions hidden"></div>
+        </div>
+        <div class="mention-hint">
+          <span>💡 Tip: Type <b>@</b> anywhere to pick a department manually — or just type your complaint and the AI will suggest one automatically.</span>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <button type="button" id="camera" class="tool-btn">📷 Live Camera</button>
+        <label for="image" class="tool-btn upload-btn">
+          📁 Upload Photo
+          <input id="image" type="file" accept="image/*" class="sr-only">
+        </label>
+        <button type="button" id="location" class="tool-btn">📍 Use Current Location</button>
+        <span id="status" class="status-indicator"></span>
+      </div>
+
+      <div id="cameraPanel" class="camera-panel hidden">
+        <div class="video-wrapper">
+          <video id="video" autoplay playsinline muted></video>
+          <canvas id="canvas" class="hidden"></canvas>
+        </div>
+        <div class="camera-controls">
+          <button type="button" id="capture" class="primary">📸 Snap Photo</button>
+          <button type="button" id="stop" class="secondary">Cancel Camera</button>
+        </div>
+      </div>
+
+      <div id="preview" class="preview-card hidden">
+        <div class="preview-img-box">
+          <img id="img" alt="Attached evidence">
+          <button type="button" id="remove" class="preview-remove" title="Remove image">×</button>
+        </div>
+        <div class="preview-meta">
+          <strong>Attached Evidence</strong>
+          <small id="previewInfo">Evidence photo attached to report</small>
+        </div>
+      </div>
+
+      <section class="location-card">
+        <div class="location-card-head">
+          <div>
+            <strong>Complaint Location</strong>
+            <small>Auto-detected via GPS & OpenStreetMap reverse geocoding. Editable if needed.</small>
+          </div>
+          <div class="coords-pill">
+            <span>Lat: <b id="lat">—</b></span>
+            <span>Lon: <b id="lon">—</b></span>
+          </div>
+        </div>
+
+        <div class="location-grid">
+          <label>
+            <span>Town / Suburb</span>
+            <input id="town" placeholder="e.g. Sector 14 / Model Town">
+          </label>
+          <label>
+            <span>City / District</span>
+            <input id="city" placeholder="e.g. Gurugram">
+          </label>
+          <label>
+            <span>State</span>
+            <input id="state" placeholder="e.g. Haryana">
+          </label>
+          <label>
+            <span>Pincode</span>
+            <input id="pincode" maxlength="6" inputmode="numeric" placeholder="e.g. 122001">
+          </label>
+        </div>
+        <input type="hidden" id="latitude">
+        <input type="hidden" id="longitude">
+      </section>
+
+      <p class="privacy-note">🔒 Real-time GPS coordinates and photographic evidence verify civic issues for faster official resolution.</p>
+
+      <div class="modal-actions">
+        <button type="button" id="cancel" class="secondary">Cancel</button>
+        <button type="submit" id="submitBtn" class="primary submit-btn">
+          <span id="submitSpinner" class="spinner hidden"></span>
+          <span id="submitText">Submit Complaint (+25 pts)</span>
+        </button>
+      </div>
+    </form>
+  </section>
+</div>
+
+<!-- Add coupon modal -->
+<div id="couponModal" class="backdrop hidden">
+  <section class="modal" style="max-width: 400px; text-align: center;">
+    <div class="modal-head">
+      <div><h2>Reward Redeemed!</h2></div>
+      <button type="button" id="closeCoupon" class="close" aria-label="Close modal">×</button>
+    </div>
+    <div style="padding: 20px 0;">
+      <p style="font-size: 14px; margin-bottom: 20px;">Use this code to claim your offer:</p>
+      <div id="couponCode" style="font-size: 24px; font-weight: 900; letter-spacing: 2px; color: #2563eb; background: #edf4ff; padding: 15px; border-radius: 12px; border: 2px dashed #93c5fd; user-select: all;"></div>
+    </div>
+  </section>
+</div>
+
+<div id="toast"></div>
+<script type="module" src="script.js"></script></body></html>
